@@ -254,6 +254,23 @@ loader.load( 'json/House.json', function ( geometry ) {
 
     scene.add(houseMesh);
 });
+loader.load( 'json/house-2.json', function ( geometry ) {
+    let house2Map = THREE.ImageUtils.loadTexture("img/house-tex-2.jpg");
+
+    let house2Mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: house2Map,side: THREE.DoubleSide }
+    ) );
+
+    house2Mesh.scale.set(2,2,2);
+
+    house2Mesh.rotation.y = 3.2;
+
+    house2Mesh.position.x = -14;
+    house2Mesh.position.y = 0;
+    house2Mesh.position.z = -6;
+
+    scene.add(house2Mesh);
+});
 loader.load( 'json/Lantern.json', function ( geometry ) {
     let lanternMap = THREE.ImageUtils.loadTexture("img/lantern-tex.png");
 
@@ -266,6 +283,19 @@ loader.load( 'json/Lantern.json', function ( geometry ) {
     lanternMesh.position.z = 0;
 
     scene.add(lanternMesh);
+});
+loader.load( 'json/Zonpaneel.json', function ( geometry ) {
+    let sunPanelMap = THREE.ImageUtils.loadTexture("img/zonpaneel-tex.jpg");
+
+    let sunPanelMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: sunPanelMap }
+    ) );
+
+    sunPanelMesh.position.x = -6;
+    sunPanelMesh.position.y = 0;
+    sunPanelMesh.position.z = 3;
+
+    scene.add(sunPanelMesh);
 });
 loader.load( 'json/Ward.json', function ( geometry ) {
 
