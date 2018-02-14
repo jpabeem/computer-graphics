@@ -246,6 +246,12 @@ loader.load( 'json/House.json', function ( geometry ) {
         { map: houseMap }
     ) );
 
+    houseMesh.scale.set(4,4,4);
+
+    houseMesh.position.x = -6;
+    houseMesh.position.y = 0;
+    houseMesh.position.z = -6;
+
     scene.add(houseMesh);
 });
 loader.load( 'json/Lantern.json', function ( geometry ) {
@@ -261,12 +267,25 @@ loader.load( 'json/Lantern.json', function ( geometry ) {
 
     scene.add(lanternMesh);
 });
+loader.load( 'json/Ward.json', function ( geometry ) {
+
+    let wardMesh = new THREE.Mesh( geometry, material);
+
+    wardMesh.scale.set(0.3,0.3,0.3);
+    wardMesh.position.x = -10;
+    wardMesh.position.y = 0;
+    wardMesh.position.z = 0;
+
+    scene.add(wardMesh);
+});
 loader.load( 'json/Tree.json', function ( geometry ) {
     let treeMap = THREE.ImageUtils.loadTexture("img/tree-tex.png");
 
     let treeMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
         { map: treeMap }
     ) );
+
+    treeMesh.scale.set(3,3,3);
 
     treeMesh.position.x = -4;
     treeMesh.position.y = 0;
