@@ -238,6 +238,42 @@ hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.6 );
 hemiLight.position.set( 500, 500, 0 );
 scene.add(hemiLight);
 
+let loader = new THREE.JSONLoader();
+loader.load( 'json/House.json', function ( geometry ) {
+    let houseMap = THREE.ImageUtils.loadTexture("img/house-tex.png");
+
+    let houseMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: houseMap }
+    ) );
+
+    scene.add(houseMesh);
+});
+loader.load( 'json/Lantern.json', function ( geometry ) {
+    let lanternMap = THREE.ImageUtils.loadTexture("img/lantern-tex.png");
+
+    let lanternMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: lanternMap }
+    ) );
+
+    lanternMesh.position.x = -6;
+    lanternMesh.position.y = 0;
+    lanternMesh.position.z = 0;
+
+    scene.add(lanternMesh);
+});
+loader.load( 'json/Tree.json', function ( geometry ) {
+    let treeMap = THREE.ImageUtils.loadTexture("img/tree-tex.png");
+
+    let treeMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: treeMap }
+    ) );
+
+    treeMesh.position.x = -4;
+    treeMesh.position.y = 0;
+    treeMesh.position.z = 0;
+
+    scene.add(treeMesh);
+});
 
 // move camera from center
 camera.position.x = 2; //move right from center of scene
