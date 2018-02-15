@@ -13,8 +13,13 @@ let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// add an event listener for the 'keypress' event
+// add an event listener for the 'keypress' and 'onresize' events
 document.addEventListener( 'keypress', onDocumentKeyPress, false );
+window.addEventListener('resize', function(event){
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect(window.innerWidth/window.innerHeight);
+    console.log("Resized!");
+});
 
 let directions  = ["img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg"];
 let materialArray = [];
@@ -35,7 +40,7 @@ scene.add( skyBox );
 let geometry = new THREE.BoxGeometry( 1, 1, 1 );
 let brickMap = THREE.ImageUtils.loadTexture("img/brick.jpg");
 
-let material = new THREE.MeshBasicMaterial(
+let material = new THREE.MeshPhongMaterial(
     { map: brickMap },
 );
 
@@ -48,7 +53,7 @@ cube.scale.set( 2, 2, 2 );
 let concreteBuildings = [];
 let concreteMap = THREE.ImageUtils.loadTexture("img/concrete1.jpg");
 
-material = new THREE.MeshBasicMaterial(
+material = new THREE.MeshPhongMaterial(
     { map: concreteMap }
 )
 
@@ -86,7 +91,12 @@ concreteBuildings.forEach(tree => {
     scene.add( tree );
 });
 
-// tree
+/*
+    Trees
+*/
+let trees = [];
+
+/* define tree */
 let leaveDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x91E56E } );
 let leaveLightMaterial = new THREE.MeshLambertMaterial( { color: 0xA2FF7A } );
 let leaveDarkDarkMaterial = new THREE.MeshLambertMaterial( { color: 0x71B356 } );
@@ -132,6 +142,7 @@ let ground = new THREE.Mesh( geometry, leaveDarkDarkMaterial );
 ground.position.set( 0, -1, 0 );
 ground.scale.set( 2.4, 0.8, 2.4 );
 
+// first tree
 let tree1 = new THREE.Group();
 tree1.add( leaveDark );
 tree1.add( leaveLight );
@@ -146,63 +157,129 @@ tree1.rotation.x = 0;
 
 tree1.position.set(7.8, 1.0, 0);
 
-scene.add( tree1 );
+trees.push(tree1);
 
 // second tree
 let tree2 = tree1.clone();
 tree2.position.set(18.2, 1.0, -1);
 tree2.rotation.y = 0.15;
 
-scene.add( tree2 );
+trees.push(tree2);
+
 
 // third tree
 let tree3 = tree1.clone();
 tree3.position.set(28.6, 1.0, -1.5);
 tree3.rotation.y = 0.30;
 
-scene.add( tree3 );
+trees.push(tree3);
 
 // fourth tree
 let tree4 = tree1.clone();
 tree4.position.set(38, 1.0, -2);
 tree4.rotation.y = 0.40;
 
-scene.add( tree4 );
+trees.push(tree4);
 
-// pavements
+trees.forEach(tree => {
+    scene.add(tree);
+});
+
+/*
+    Pavements
+*/
 let pavements = [];
+
+/* define pavements */
 let pavementMap = THREE.ImageUtils.loadTexture("img/broken_pavement.jpg");
 
-material = new THREE.MeshBasicMaterial(
+material = new THREE.MeshPhongMaterial(
     { map: pavementMap }
 )
 
+// pavement 1
 let pavement1 = new THREE.Mesh( geometry, material );
 pavements.push( pavement1 );
 pavement1.position.set(5, -0.8, 1);
 pavement1.scale.set( 8, 0.8, 8 );
 
+// pavement 2
 let pavement2 = new THREE.Mesh( geometry, material );
 pavements.push( pavement2 );
 pavement2.position.set(15.6, -0.8, 0.93);
 pavement2.scale.set( 8, 0.8, 8 );
 pavement2.rotation.y = 0.15;
 
+// pavement 3
 let pavement3 = new THREE.Mesh( geometry, material );
 pavements.push( pavement3 );
 pavement3.position.set(26.3, -0.8, 0.50);
 pavement3.scale.set( 8, 0.8, 8 );
 pavement3.rotation.y = 0.30;
 
+// pavement 4
 let pavement4 = new THREE.Mesh( geometry, material );
 pavements.push( pavement4 );
 pavement4.position.set(36.2, -0.8, 0.05);
 pavement4.scale.set( 8, 0.8, 8 );
 pavement4.rotation.y = 0.40;
 
-
 pavements.forEach(pavement => {
     scene.add ( pavement )
+});
+
+/*
+    Street lanterns
+*/
+let lanterns = [];
+
+/* define street lanterns */
+let lanternMaterial = new THREE.MeshPhongMaterial( { color: 0xB0C4DE } );
+
+let lanternStem = new THREE.Mesh( geometry, lanternMaterial );
+lanternStem.position.set( 0, 3, 0 );
+lanternStem.scale.set( 0.3, 10, 0.3 );
+
+let lanternEnd = new THREE.Mesh( geometry, lanternMaterial );
+lanternEnd.position.set( 0, 8.0, -0.3 );
+lanternEnd.scale.set( 0.3, 0.3, 0.4 );
+
+lanternMaterial = new THREE.MeshLambertMaterial({color: 0xB0C4DE, transparent: true, opacity: 0.5});
+let lanternGeometry = new THREE.SphereGeometry(1,32,24, Math.PI/2, Math.PI*2, 5000, Math.PI);
+lanternMaterial.side = THREE.DoubleSide;
+
+let lanternSphere = new THREE.Mesh( lanternGeometry, lanternMaterial );
+lanternSphere.position.set( 0, 7.9, -1.5 );
+lanternSphere.scale.set( 1, 1, 1 );
+
+// lantern 1
+let lantern1 = new THREE.Group();
+lantern1.add( lanternStem );
+lantern1.add( lanternEnd );
+lantern1.add( lanternSphere );
+lantern1.position.set(0, 0.3, 15);
+
+lanterns.push( lantern1 );
+
+// lantern 2
+let lantern2 = lantern1.clone();
+lantern2.position.set(15, 0.3, 15);
+lanterns.push( lantern2 );
+
+// lantern 3
+let lantern3 = lantern1.clone();
+lantern3.position.set(30, 0.3, 15);
+lanterns.push( lantern3 );
+
+// lantern 4
+let lantern4 = lantern1.clone();
+lantern4.position.set(45, 0.3, 15);
+lanterns.push( lantern4 );
+
+
+// add lanterns to scene
+lanterns.forEach(lantern => {
+    scene.add( lantern );
 });
 
 // line (vectors)
@@ -230,14 +307,26 @@ scene.add( ambient );
 let axisHelper = new THREE.AxisHelper( 5 );
 scene.add( axisHelper );
 
-// let light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-// light.position.set(0, 0, 1 );
-// scene.add( light );
+scene.add( new THREE.AmbientLight( 0x00020 ) );
 
 hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.6 ); 
-hemiLight.position.set( 500, 500, 0 );
-scene.add(hemiLight);
 
+let spotLight = new THREE.SpotLight( 0xffffff );
+spotLight.position.set( -25, 35, 15 );
+// scene.add( spotLight );
+
+spotLightHelper = new THREE.SpotLightHelper( spotLight );
+// scene.add( spotLightHelper );
+
+light = new THREE.DirectionalLight( 0xFFFFFF, 0.2 );
+light.position.set( -50, 500, 50 );
+scene.add( light );
+
+let directionalLightHelper = new THREE.DirectionalLightHelper ( light );
+scene.add( directionalLightHelper )
+
+
+// Loading JSON models
 let loader = new THREE.JSONLoader();
 loader.load( 'json/House.json', function ( geometry ) {
     let houseMap = THREE.ImageUtils.loadTexture("img/house-tex.png");
@@ -328,13 +417,17 @@ loader.load( 'json/Tree.json', function ( geometry ) {
 camera.position.x = 2; //move right from center of scene
 camera.position.y = 1; //move up from center of scene
 camera.position.z = 5; //move camera away from center of scene
-
 // import camera control and rotation library
 controls = new THREE.OrbitControls( camera ); 
 controls.autoRotate = false;
-controls.autoRotateSpeed = 2;
+controls.autoRotateSpeed = 4;
 controls.noKeys = false;
 
+camera.position.set(  -15, 40, 30);
+
+controls.update();
+
+// method that gets executed when the corresponding event was fired
 function onDocumentKeyPress( event ) {
 
     var keyCode = event.which;

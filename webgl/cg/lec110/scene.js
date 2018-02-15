@@ -15,7 +15,7 @@ document.body.appendChild(renderer.domElement);
 
 var material = new THREE.MeshPhongMaterial({ color: 0xcccccc, ambient: 0x444444, side: THREE.DoubleSide });
 var loader = new THREE.JSONLoader();
-loader.load( "teapot.json", function( geometry, materials ) {
+loader.load( "teapot.js", function( geometry, materials ) {
    mesh = new THREE.Mesh( geometry, material );
    scene.add( mesh );
 });
