@@ -325,7 +325,6 @@ scene.add( light );
 let directionalLightHelper = new THREE.DirectionalLightHelper ( light );
 scene.add( directionalLightHelper )
 
-
 // Loading JSON models
 let loader = new THREE.JSONLoader();
 loader.load( 'json/House.json', function ( geometry ) {
