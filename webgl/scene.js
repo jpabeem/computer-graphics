@@ -325,6 +325,93 @@ scene.add( light );
 let directionalLightHelper = new THREE.DirectionalLightHelper ( light );
 scene.add( directionalLightHelper )
 
+// Loading JSON models
+let loader = new THREE.JSONLoader();
+loader.load( 'json/House.json', function ( geometry ) {
+    let houseMap = THREE.ImageUtils.loadTexture("img/house-tex.png");
+
+    let houseMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: houseMap }
+    ) );
+
+    houseMesh.scale.set(4,4,4);
+
+    houseMesh.position.x = -6;
+    houseMesh.position.y = 0;
+    houseMesh.position.z = -6;
+
+    scene.add(houseMesh);
+});
+loader.load( 'json/house-2.json', function ( geometry ) {
+    let house2Map = THREE.ImageUtils.loadTexture("img/house-tex-2.jpg");
+
+    let house2Mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: house2Map,side: THREE.DoubleSide }
+    ) );
+
+    house2Mesh.scale.set(2,2,2);
+
+    house2Mesh.rotation.y = 3.2;
+
+    house2Mesh.position.x = -14;
+    house2Mesh.position.y = 0;
+    house2Mesh.position.z = -6;
+
+    scene.add(house2Mesh);
+});
+loader.load( 'json/Lantern.json', function ( geometry ) {
+    let lanternMap = THREE.ImageUtils.loadTexture("img/lantern-tex.png");
+
+    let lanternMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: lanternMap }
+    ) );
+
+    lanternMesh.position.x = -6;
+    lanternMesh.position.y = 0;
+    lanternMesh.position.z = 0;
+
+    scene.add(lanternMesh);
+});
+loader.load( 'json/Zonpaneel.json', function ( geometry ) {
+    let sunPanelMap = THREE.ImageUtils.loadTexture("img/zonpaneel-tex.jpg");
+
+    let sunPanelMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: sunPanelMap }
+    ) );
+
+    sunPanelMesh.position.x = -6;
+    sunPanelMesh.position.y = 0;
+    sunPanelMesh.position.z = 3;
+
+    scene.add(sunPanelMesh);
+});
+loader.load( 'json/Ward.json', function ( geometry ) {
+
+    let wardMesh = new THREE.Mesh( geometry, material);
+
+    wardMesh.scale.set(0.3,0.3,0.3);
+    wardMesh.position.x = -10;
+    wardMesh.position.y = 0;
+    wardMesh.position.z = 0;
+
+    scene.add(wardMesh);
+});
+loader.load( 'json/Tree.json', function ( geometry ) {
+    let treeMap = THREE.ImageUtils.loadTexture("img/tree-tex.png");
+
+    let treeMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+        { map: treeMap }
+    ) );
+
+    treeMesh.scale.set(3,3,3);
+
+    treeMesh.position.x = -4;
+    treeMesh.position.y = 0;
+    treeMesh.position.z = 0;
+
+    scene.add(treeMesh);
+});
+
 // move camera from center
 camera.position.x = 2; //move right from center of scene
 camera.position.y = 1; //move up from center of scene
