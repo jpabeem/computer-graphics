@@ -1,3 +1,8 @@
+function randomNum(low, high)
+{
+    return Math.floor((Math.random() * high) + low);
+}
+
 // Create scene
 let scene = new THREE.Scene();
 
@@ -41,7 +46,7 @@ let geometry = new THREE.BoxGeometry( 1, 1, 1 );
 let brickMap = THREE.ImageUtils.loadTexture("img/brick.jpg");
 
 let material = new THREE.MeshPhongMaterial(
-    { map: brickMap },
+    { map: brickMap }
 );
 
 let cube = new THREE.Mesh( geometry, material );
@@ -222,7 +227,7 @@ pavement4.scale.set( 8, 0.8, 8 );
 pavement4.rotation.y = 0.40;
 
 pavements.forEach(pavement => {
-    scene.add ( pavement )
+    scene.add( pavement );
 });
 
 /*
@@ -326,7 +331,6 @@ scene.add( directionalLightHelper )
     Loading JSON models
 */
 let loader = new THREE.JSONLoader();
-
 /* 
     Used to retrieve the angle for a certain building
     "key" : "value" corresponds to:
@@ -339,53 +343,37 @@ let rotationDictionary = {
     3: 0.40
 };
 
-// House
-loader.load( 'json/House.json', function ( geometry ) {
-    let houseMap = THREE.ImageUtils.loadTexture("img/house-tex.png");
-
-    let houseMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
-        { map: houseMap }
-    ) );
-
-    houseMesh.scale.set(4,4,4);
-
-    houseMesh.position.x = -6;
-    houseMesh.position.y = 0;
-    houseMesh.position.z = -6;
-
-    scene.add(houseMesh);
-});
-
 // Concrete house (with balcony and glass windows)
 loader.load( 'json/house-2.json', function ( geometry ) {
     let house2Map = THREE.ImageUtils.loadTexture("img/house-tex-2.jpg");
-
-    let house2Mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+    let house2Mat = new THREE.MeshPhongMaterial(
         { map: house2Map,side: THREE.DoubleSide }
-    ) );
+    );
 
-    house2Mesh.scale.set(2,2,2);
 
-    house2Mesh.rotation.y = 3.2;
+    for(let i = 0; i < 5; i++)
+    {
+        let house2Mesh = new THREE.Mesh( geometry, house2Mat );
 
-    house2Mesh.position.x = -14;
-    house2Mesh.position.y = 0;
-    house2Mesh.position.z = -6;
+        house2Mesh.scale.set(2.8,2.8,2.8);
 
-    scene.add(house2Mesh);
+        house2Mesh.rotation.y = 3.1;
+
+        house2Mesh.position.x = -3.3 + (i * -9.3);
+        house2Mesh.position.y = 0;
+        house2Mesh.position.z = -9;
+
+        scene.add(house2Mesh);
+    }
 });
 
 // Lantern
 loader.load( 'json/Lantern.json', function ( geometry ) {
     let lanternMap = THREE.ImageUtils.loadTexture("img/lantern-tex.png");
 
-    let lanternMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+    let lanternMesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial(
         { map: lanternMap }
     ) );
-
-    lanternMesh.position.x = -6;
-    lanternMesh.position.y = 0;
-    lanternMesh.position.z = 0;
 
     let totalHouses = 4;
     let initialX = 1.5;
@@ -403,8 +391,6 @@ loader.load( 'json/Lantern.json', function ( geometry ) {
         tempLantern.rotation.y = rotationDictionary[i];
         scene.add(tempLantern);
     }
-
-    scene.add(lanternMesh);
 });
 
 // Solar panel
@@ -456,17 +442,21 @@ loader.load( 'json/Solarpanel.json', function ( geometry ) {
     }
 });
 
-
-
 // Ward (custom designed model)
+let wardMesh;
 loader.load( 'json/Ward.json', function ( geometry ) {
+    let wardMap = THREE.ImageUtils.loadTexture("img/ward-tex.png");
+    let wardMat = new THREE.MeshPhongMaterial(
+        { map: wardMap }
+    );
 
-    let wardMesh = new THREE.Mesh( geometry, material);
+    wardMat.transparent = true;
 
-    wardMesh.scale.set(0.3,0.3,0.3);
-    wardMesh.position.x = -10;
+    wardMesh = new THREE.Mesh( geometry, wardMat);
+
+    wardMesh.position.x = -30;
     wardMesh.position.y = 0;
-    wardMesh.position.z = 0;
+    wardMesh.position.z = 3;
 
     scene.add(wardMesh);
 });
@@ -474,18 +464,74 @@ loader.load( 'json/Ward.json', function ( geometry ) {
 // Tree
 loader.load( 'json/Tree.json', function ( geometry ) {
     let treeMap = THREE.ImageUtils.loadTexture("img/tree-tex.png");
-
-    let treeMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
+    let treeMat = new THREE.MeshPhongMaterial(
         { map: treeMap }
-    ) );
+    );
 
-    treeMesh.scale.set(3,3,3);
+    for(let i = 0; i < 17; i++)
+    {
+        let treeMesh = new THREE.Mesh( geometry, treeMat );
 
-    treeMesh.position.x = -4;
-    treeMesh.position.y = 0;
-    treeMesh.position.z = 0;
+        let scale = 5 + randomNum(0, 5);
 
-    scene.add(treeMesh);
+        treeMesh.scale.set(scale, scale, scale);
+
+        treeMesh.rotation.y = randomNum(0,4);
+
+        treeMesh.position.x = -50 + i * 6;
+        treeMesh.position.y = 0;
+        treeMesh.position.z = 20 + randomNum(0, scale);
+
+        scene.add(treeMesh);
+    }
+    for(let i = 0; i < 17; i++)
+    {
+        let treeMesh = new THREE.Mesh( geometry, treeMat );
+
+        let scale = 5 + randomNum(0, 5);
+
+        treeMesh.scale.set(scale, scale, scale);
+
+        treeMesh.rotation.y = randomNum(0,4);
+
+        treeMesh.position.x = -50 + i * 6;
+        treeMesh.position.y = 0;
+        treeMesh.position.z = 30 + randomNum(0, scale);
+
+        scene.add(treeMesh);
+    }
+    for(let i = 0; i < 17; i++)
+    {
+        let treeMesh = new THREE.Mesh( geometry, treeMat );
+
+        let scale = 5 + randomNum(0, 5);
+
+        treeMesh.scale.set(scale, scale, scale);
+
+        treeMesh.rotation.y = randomNum(0,4);
+
+        treeMesh.position.x = -50 + i * 6;
+        treeMesh.position.y = 0;
+        treeMesh.position.z = -(25 + randomNum(0, scale));
+
+        scene.add(treeMesh);
+    }
+    for(let i = 0; i < 17; i++)
+    {
+        let treeMesh = new THREE.Mesh( geometry, treeMat );
+
+        let scale = 5 + randomNum(0, 5);
+
+        treeMesh.scale.set(scale, scale, scale);
+
+        treeMesh.rotation.y = randomNum(0,4);
+
+        treeMesh.position.x = -50 + i * 6;
+        treeMesh.position.y = 0;
+        treeMesh.position.z = -(35 + randomNum(0, scale));
+
+        scene.add(treeMesh);
+    }
 });
 
 // move camera from center
@@ -532,8 +578,13 @@ function onDocumentKeyPress( event ) {
     }
 }
 
+let rot = 0;
 let render = function () {
    requestAnimationFrame(render);
+   rot += 0.05;
+
+   wardMesh.position.x += Math.cos(rot) / 3;
+   wardMesh.position.z += Math.sin(rot) / 3;
 
    controls.update();
    renderer.render(scene, camera);
