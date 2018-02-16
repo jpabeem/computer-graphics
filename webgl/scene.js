@@ -1,3 +1,8 @@
+let showXYZHelper = true;
+let showLightHelper = true;
+let toggleAnimations = true;
+let toggleAutoRotate = false;
+
 function randomNum(low, high)
 {
     return Math.floor((Math.random() * high) + low);
@@ -23,8 +28,49 @@ document.addEventListener( 'keypress', onDocumentKeyPress, false );
 window.addEventListener('resize', function(event){
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect(window.innerWidth/window.innerHeight);
-    console.log("Resized!");
 });
+
+// add event listeners to all the buttons shown in index.html
+document.getElementById("xyz-helper").addEventListener("click", function() {
+    if (showXYZHelper) {
+        showXYZHelper = false;
+        scene.remove(axisHelper);
+        document.getElementById("xyz-helper").innerHTML = "Show XYZ Helper";
+    } else {
+        showXYZHelper = true;
+        scene.add(axisHelper);
+        document.getElementById("xyz-helper").innerHTML = "Hide XYZ Helper";
+    }
+});
+
+document.getElementById("light-helper").addEventListener("click", function() {
+    if (showLightHelper) {
+        showLightHelper = false;
+        scene.remove(directionalLightHelper);
+        document.getElementById("light-helper").innerHTML = "Show LightHelper";
+    } else {
+        showLightHelper = true;
+        scene.add(directionalLightHelper);
+        document.getElementById("light-helper").innerHTML = "Hide LightHelper";
+    }
+});
+
+document.getElementById("toggle-animations").addEventListener("click", function() {
+    if (toggleAnimations)
+        toggleAnimations = false;
+    else toggleAnimations = true;
+});
+
+document.getElementById("toggle-auto-rotate").addEventListener("click", function() {
+    if (toggleAutoRotate) {
+        toggleAutoRotate = false;
+    }
+    else {
+        toggleAutoRotate = true;
+    }
+    controls.autoRotate = toggleAutoRotate;
+});
+
 
 let directions  = ["img/posx.jpg", "img/negx.jpg", "img/posy.jpg", "img/negy.jpg", "img/posz.jpg", "img/negz.jpg"];
 let materialArray = [];
@@ -183,6 +229,7 @@ tree4.rotation.y = 0.40;
 
 trees.push(tree4);
 
+// add trees to scene
 trees.forEach(tree => {
     scene.add(tree);
 });
@@ -226,6 +273,7 @@ pavement4.position.set(36.2, -0.8, 0.05);
 pavement4.scale.set( 8, 0.8, 8 );
 pavement4.rotation.y = 0.40;
 
+// add pavements to scene
 pavements.forEach(pavement => {
     scene.add( pavement );
 });
@@ -278,23 +326,10 @@ let lantern4 = lantern1.clone();
 lantern4.position.set(45, 0.3, 15);
 lanterns.push( lantern4 );
 
-
 // add lanterns to scene
 lanterns.forEach(lantern => {
     scene.add( lantern );
 });
-
-// line (vectors)
-material = new THREE.LineBasicMaterial({ color: 0x0000ff });
-
-vectorGeometry = new THREE.Geometry();
-vectorGeometry.vertices.push(new THREE.Vector3(0, -0.3, 5.7));
-vectorGeometry.vertices.push(new THREE.Vector3(40, -0.3, 5.7));
-// vectorGeometry.vertices.push(new THREE.Vector3(-10, 0, 0));
-
-line = new THREE.Line(vectorGeometry, material);
-
-scene.add(line);
 
 // floor
 let floor = new THREE.Mesh( geometry, leaveDarkDarkMaterial );
@@ -306,19 +341,11 @@ scene.add( floor );
 let ambient = new THREE.AmbientLight( 0x404040 );
 scene.add( ambient );
 
+// light , light helpers & axis helpers
 let axisHelper = new THREE.AxisHelper( 5 );
 scene.add( axisHelper );
 
 scene.add( new THREE.AmbientLight( 0x00020 ) );
-
-hemiLight = new THREE.HemisphereLight( 0x0000ff, 0x00ff00, 0.6 ); 
-
-let spotLight = new THREE.SpotLight( 0xffffff );
-spotLight.position.set( -25, 35, 15 );
-// scene.add( spotLight );
-
-spotLightHelper = new THREE.SpotLightHelper( spotLight );
-// scene.add( spotLightHelper );
 
 light = new THREE.DirectionalLight( 0xFFFFFF, 0.2 );
 light.position.set( -50, 500, 50 );
@@ -394,7 +421,6 @@ loader.load( 'json/Lantern.json', function ( geometry ) {
 });
 
 // Solar panel
-let solarPanels = [];
 loader.load( 'json/Solarpanel.json', function ( geometry ) {
     let sunPanelMap = THREE.ImageUtils.loadTexture("img/zonpaneel-tex.jpg");
 
@@ -405,9 +431,6 @@ loader.load( 'json/Solarpanel.json', function ( geometry ) {
     sunPanelMesh.position.x = -6;
     sunPanelMesh.position.y = 0;
     sunPanelMesh.position.z = 3;
-
-    solarPanels.push(sunPanelMesh);
-    scene.add(sunPanelMesh);
 
     let houseCount = 3; /* amount of houses (left to right) equipped with solar panels */
     let rowCount = 3; /* amount of rows with solar panels per house */
@@ -422,7 +445,6 @@ loader.load( 'json/Solarpanel.json', function ( geometry ) {
         4: 28
     }
 
-
     // Create solar panels for every house
     for(houseNumber = 1; houseNumber <= houseCount; houseNumber++) {
         for(row = 1; row <= rowCount; row++) {
@@ -433,7 +455,6 @@ loader.load( 'json/Solarpanel.json', function ( geometry ) {
                 tempSolarPanel.position.set(initialX, 14.5, initialZ);
                 tempSolarPanel.rotation.y = rotationDictionary[houseNumber - 1];
                 scene.add(tempSolarPanel);
-                console.log(houseNumber, row, i, initialX, initialZ);
                 initialX += 2.5;
             }
             initialZ += 4;
@@ -468,6 +489,7 @@ loader.load( 'json/Tree.json', function ( geometry ) {
         { map: treeMap }
     );
 
+    // Draw a forest of trees
     for(let i = 0; i < 17; i++)
     {
         let treeMesh = new THREE.Mesh( geometry, treeMat );
@@ -558,7 +580,6 @@ function onDocumentKeyPress( event ) {
     // left arrow
     if ( keyCode == 37 )
     {
-        console.log("Left rotation")
         camera.position.x += rotationDelta;
     }
     // up arrow
@@ -581,10 +602,12 @@ function onDocumentKeyPress( event ) {
 let rot = 0;
 let render = function () {
    requestAnimationFrame(render);
-   rot += 0.05;
-
-   wardMesh.position.x += Math.cos(rot) / 3;
-   wardMesh.position.z += Math.sin(rot) / 3;
+   
+   if (wardMesh !== undefined && toggleAnimations) {
+        rot += 0.05;
+        wardMesh.position.x += Math.cos(rot) / 3;
+        wardMesh.position.z += Math.sin(rot) / 3;
+   }
 
    controls.update();
    renderer.render(scene, camera);

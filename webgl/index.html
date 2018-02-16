@@ -6,11 +6,25 @@
       html, body {
          margin: 0; padding: 0; overflow: hidden;
       }
+
+      .buttons {
+          display: grid;
+          grid-template-columns: 25% 25% 25% 25%;
+      }
+
+      .grid-item {
+          justify-self: stretch;
+      }
    </style>
-   <a href="/cg/">Go to project index</a>
-   <a href="http://www.mb3d.co.uk/mb3d/Brick_Seamless_and_Tileable_High_Res_Textures.html">Go to textures</a>
 </head>
+
 <body>
+    <div class="buttons">
+            <button class="grid-item" id="xyz-helper">Hide XYZ helper</button>
+            <button class="grid-item" id="light-helper">Hide LightHelper</button>
+            <button class="grid-item" id="toggle-animations">Toggle animations</button>
+            <button class="grid-item" id="toggle-auto-rotate">Toggle autorotate</button>
+    </div>
    <script src="three/three.js"></script>
    <script src="three/OrbitControls.js"></script>
    <script src="scene.js"></script></body>
