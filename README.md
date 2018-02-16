@@ -22,4 +22,9 @@ make car(s) move
 1. Clone the repository
 2. Access the project through your favourite local webserver at ```localhost/webgl/```
 
+### Controls
+**```MOUSE:```** control the camera with the mouse (movement, panining & zooming).
+
+**```ARROW KEYS:```** control the Z and X axises with the arrow keys.
+
 ---
