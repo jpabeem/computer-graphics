@@ -67,7 +67,6 @@ concreteBuildings.push( concreteHouse2 );
 
 concreteHouse2.position.set(14, 7, -10);
 concreteHouse2.scale.set( 8, 15, 14 );
-concreteHouse2.rotation.x = 0;
 concreteHouse2.rotation.y = 0.15;
 
 let concreteHouse3 = new THREE.Mesh( geometry, material );
@@ -75,7 +74,6 @@ concreteBuildings.push( concreteHouse3 );
 
 concreteHouse3.position.set(23, 7, -10);
 concreteHouse3.scale.set( 8, 15, 14 );
-concreteHouse3.rotation.x = 0;
 concreteHouse3.rotation.y = 0.30;
 
 let concreteHouse4 = new THREE.Mesh( geometry, material );
@@ -83,7 +81,6 @@ concreteBuildings.push( concreteHouse4 );
 
 concreteHouse4.position.set(32, 7, -10);
 concreteHouse4.scale.set( 8, 15, 14 );
-concreteHouse4.rotation.x = 0;
 concreteHouse4.rotation.y = 0.40;
 
 // add concrete buildings to scene
@@ -237,7 +234,7 @@ let lanterns = [];
 let lanternMaterial = new THREE.MeshPhongMaterial( { color: 0xB0C4DE } );
 
 let lanternStem = new THREE.Mesh( geometry, lanternMaterial );
-lanternStem.position.set( 0, 3, 0 );
+lanternStem.position.set( 0, 4, 0 );
 lanternStem.scale.set( 0.3, 10, 0.3 );
 
 let lanternEnd = new THREE.Mesh( geometry, lanternMaterial );
@@ -325,8 +322,24 @@ scene.add( light );
 let directionalLightHelper = new THREE.DirectionalLightHelper ( light );
 scene.add( directionalLightHelper )
 
-// Loading JSON models
+/*
+    Loading JSON models
+*/
 let loader = new THREE.JSONLoader();
+
+/* 
+    Used to retrieve the angle for a certain building
+    "key" : "value" corresponds to:
+    house number : angle 
+*/
+let rotationDictionary = { 
+    0: 0,
+    1: 0.10,
+    2: 0.30,
+    3: 0.40
+};
+
+// House
 loader.load( 'json/House.json', function ( geometry ) {
     let houseMap = THREE.ImageUtils.loadTexture("img/house-tex.png");
 
@@ -342,6 +355,8 @@ loader.load( 'json/House.json', function ( geometry ) {
 
     scene.add(houseMesh);
 });
+
+// Concrete house (with balcony and glass windows)
 loader.load( 'json/house-2.json', function ( geometry ) {
     let house2Map = THREE.ImageUtils.loadTexture("img/house-tex-2.jpg");
 
@@ -359,6 +374,8 @@ loader.load( 'json/house-2.json', function ( geometry ) {
 
     scene.add(house2Mesh);
 });
+
+// Lantern
 loader.load( 'json/Lantern.json', function ( geometry ) {
     let lanternMap = THREE.ImageUtils.loadTexture("img/lantern-tex.png");
 
@@ -370,9 +387,29 @@ loader.load( 'json/Lantern.json', function ( geometry ) {
     lanternMesh.position.y = 0;
     lanternMesh.position.z = 0;
 
+    let totalHouses = 4;
+    let initialX = 1.5;
+    let lanternXDictionary = {
+        0: 1.5,
+        1: 12,
+        2: 22.5,
+        3: 32.5
+    }
+
+    for(i = 0; i < totalHouses; i++) {
+        let tempLantern = lanternMesh.clone();
+        tempLantern.scale.set(1, 2, 1);
+        tempLantern.position.set(lanternXDictionary[i], -0.5, 0);
+        tempLantern.rotation.y = rotationDictionary[i];
+        scene.add(tempLantern);
+    }
+
     scene.add(lanternMesh);
 });
-loader.load( 'json/Zonpaneel.json', function ( geometry ) {
+
+// Solar panel
+let solarPanels = [];
+loader.load( 'json/Solarpanel.json', function ( geometry ) {
     let sunPanelMap = THREE.ImageUtils.loadTexture("img/zonpaneel-tex.jpg");
 
     let sunPanelMesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial(
@@ -383,8 +420,45 @@ loader.load( 'json/Zonpaneel.json', function ( geometry ) {
     sunPanelMesh.position.y = 0;
     sunPanelMesh.position.z = 3;
 
+    solarPanels.push(sunPanelMesh);
     scene.add(sunPanelMesh);
+
+    let houseCount = 3; /* amount of houses (left to right) equipped with solar panels */
+    let rowCount = 3; /* amount of rows with solar panels per house */
+    let columnCount = 3; /* amount of solar panels per row */
+    let initialX = 2.5; /* starting point on X-axis for every house*/
+    let initialZ = -14;  /* starting point on Z-axis */
+
+    let initialXDictionary = {
+        1: 2.5,
+        2: 12,
+        3: 21,
+        4: 28
+    }
+
+
+    // Create solar panels for every house
+    for(houseNumber = 1; houseNumber <= houseCount; houseNumber++) {
+        for(row = 1; row <= rowCount; row++) {
+            initialX = initialXDictionary[houseNumber];
+            for(i = 1; i <= columnCount; i++ ) {
+                let tempSolarPanel = sunPanelMesh.clone();
+                tempSolarPanel.scale.set(2, 1, 2);
+                tempSolarPanel.position.set(initialX, 14.5, initialZ);
+                tempSolarPanel.rotation.y = rotationDictionary[houseNumber - 1];
+                scene.add(tempSolarPanel);
+                console.log(houseNumber, row, i, initialX, initialZ);
+                initialX += 2.5;
+            }
+            initialZ += 4;
+        }
+        initialZ = -14;
+    }
 });
+
+
+
+// Ward (custom designed model)
 loader.load( 'json/Ward.json', function ( geometry ) {
 
     let wardMesh = new THREE.Mesh( geometry, material);
@@ -396,6 +470,8 @@ loader.load( 'json/Ward.json', function ( geometry ) {
 
     scene.add(wardMesh);
 });
+
+// Tree
 loader.load( 'json/Tree.json', function ( geometry ) {
     let treeMap = THREE.ImageUtils.loadTexture("img/tree-tex.png");
 
